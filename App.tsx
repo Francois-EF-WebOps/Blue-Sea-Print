@@ -6,7 +6,7 @@ import { BLUEPRINT_DATA } from './constants';
 import { GoogleGenAI } from '@google/genai';
 
 const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<Section>(Section.DOCTRINE);
+  const [activeSection, setActiveSection] = useState<Section>(Section.SIX_HOUR_PROTOCOL);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -33,6 +33,7 @@ const App: React.FC = () => {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
       const prompt = `You are a survival expert specializing in the "Blue Sea Print" framework. 
       The framework covers: maritime resilience, subsistence fishing, tool primitives, nutrition, and preservation.
+      The current context is the 6-Hour Survival Protocol (from zero to meal).
       Answer the user's specific question concisely and practically. Avoid fluff.
       User question: ${input}`;
 
@@ -54,6 +55,8 @@ const App: React.FC = () => {
     const Icon = (LucideIcons as any)[name];
     return Icon ? <Icon size={size} className={className} /> : null;
   };
+
+  const data = BLUEPRINT_DATA[activeSection];
 
   return (
     <div className="flex h-screen overflow-hidden text-slate-900">
@@ -117,15 +120,17 @@ const App: React.FC = () => {
       <main className="flex-1 flex flex-col h-full bg-slate-50 relative overflow-hidden">
         {/* Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
-          <button 
-            className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <LucideIcons.Menu size={20} />
-          </button>
-          <div className="flex items-center gap-2 text-slate-500 font-medium text-sm">
-            <IconComponent name={BLUEPRINT_DATA[activeSection].icon} size={16} />
-            <span>{BLUEPRINT_DATA[activeSection].title}</span>
+          <div className="flex items-center gap-4">
+            <button 
+              className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <LucideIcons.Menu size={20} />
+            </button>
+            <div className="flex items-center gap-2 text-slate-500 font-medium text-sm">
+              <IconComponent name={data.icon} size={16} />
+              <span>{data.title}</span>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <span className="hidden sm:block text-xs font-mono text-slate-400">REV. 01.2024</span>
@@ -134,19 +139,57 @@ const App: React.FC = () => {
 
         {/* Section Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-6 md:p-12">
+          <div className="max-w-4xl mx-auto p-6 md:p-12 pb-32">
             {activeSection !== Section.AI_ASSISTANT ? (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <header>
-                  <h2 className="text-3xl font-bold text-slate-900 mb-2">{BLUEPRINT_DATA[activeSection].title}</h2>
-                  <p className="text-lg text-slate-600">{BLUEPRINT_DATA[activeSection].description}</p>
+                  <div className="flex items-center gap-3 mb-2">
+                    {activeSection === Section.SIX_HOUR_PROTOCOL && (
+                      <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold uppercase rounded tracking-wider">High Priority</span>
+                    )}
+                    <h2 className="text-3xl font-bold text-slate-900">{data.title}</h2>
+                  </div>
+                  <p className="text-lg text-slate-600 leading-relaxed">{data.description}</p>
                 </header>
 
+                {/* Timeline Component for 6-Hour Protocol */}
+                {data.timeline && (
+                  <div className="space-y-6 relative before:absolute before:left-[19px] before:top-4 before:bottom-4 before:w-0.5 before:bg-slate-200">
+                    {data.timeline.map((item, idx) => (
+                      <div key={idx} className="relative pl-12">
+                        <div className={`absolute left-0 top-1 w-10 h-10 rounded-full flex items-center justify-center border-4 border-slate-50 shadow-sm z-10 ${idx === 0 ? 'bg-blue-600 text-white' : 'bg-white text-slate-400 border-slate-200'}`}>
+                          <span className="text-xs font-bold">{idx + 1}</span>
+                        </div>
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-blue-200 transition-colors">
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-bold text-slate-900">{item.label}</h4>
+                            <span className="text-xs font-mono bg-slate-100 px-2 py-1 rounded text-slate-500">{item.duration}</span>
+                          </div>
+                          <ul className="space-y-2">
+                            {item.tasks.map((task, tidx) => (
+                              <li key={tidx} className="flex gap-3 text-sm text-slate-600">
+                                <LucideIcons.CircleCheck size={16} className="text-emerald-500 mt-0.5 shrink-0" />
+                                {task}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="grid gap-6">
-                  {Object.entries(BLUEPRINT_DATA[activeSection].details || {}).map(([key, value]) => (
+                  {Object.entries(data.details || {}).map(([key, value]) => (
                     <div key={key} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                       <h3 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-2">{key}</h3>
-                      <p className="text-slate-700 leading-relaxed whitespace-pre-line">{value}</p>
+                      <div className="text-slate-700 leading-relaxed whitespace-pre-line text-sm">
+                        {Array.isArray(value) ? (
+                          <ul className="list-disc pl-5 space-y-1">
+                            {value.map((v, i) => <li key={i}>{v}</li>)}
+                          </ul>
+                        ) : value}
+                      </div>
                     </div>
                   ))}
                 </div>

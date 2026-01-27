@@ -1,5 +1,6 @@
 
 export enum Section {
+  SIX_HOUR_PROTOCOL = 'SIX_HOUR_PROTOCOL',
   DOCTRINE = 'DOCTRINE',
   PATHWAY = 'PATHWAY',
   PRIMITIVES = 'PRIMITIVES',
@@ -17,6 +18,11 @@ export interface BlueprintContent {
   description: string;
   steps?: string[];
   details?: Record<string, string | string[]>;
+  timeline?: {
+    label: string;
+    duration: string;
+    tasks: string[];
+  }[];
 }
 
 export interface ChatMessage {

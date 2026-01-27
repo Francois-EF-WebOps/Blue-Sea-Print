@@ -2,6 +2,63 @@
 import { Section, BlueprintContent } from './types';
 
 export const BLUEPRINT_DATA: Record<Section, BlueprintContent> = {
+  [Section.SIX_HOUR_PROTOCOL]: {
+    title: "6-Hour Survival Protocol",
+    icon: "Timer",
+    description: "From 'Documentation in Hand' to 'Eating' in 360 minutes. A strict, high-speed deployment for immediate survival.",
+    timeline: [
+      {
+        label: "H0-1: Assessment & Preparation",
+        duration: "60 min",
+        tasks: [
+          "Check Tide: Identify if water is rising or falling. Locate high-tide line.",
+          "Resource Scan: Locate rocks (shellfish), pools (fish), and beach (tools).",
+          "Safety Brief: Establish 'Never Back to Sea' rule and identification limits."
+        ]
+      },
+      {
+        label: "H1-2: Tool Primitive Build",
+        duration: "60 min",
+        tasks: [
+          "Shell Knife: Chip a flat stone against a hammer-stone for a sharp edge.",
+          "Container: Scavenge large shells, plastic, or use a folded hat/shirt.",
+          "Digging Stick: Sharpen a wrist-thick hardwood stick on rough stone."
+        ]
+      },
+      {
+        label: "H2-4: The Primary Harvest",
+        duration: "120 min",
+        tasks: [
+          "Shellfish: Pry 20+ mussels or limpets from rocks using the digging stick.",
+          "Seaweed: Harvest green (Sea Lettuce) or red (Dulse) seaweed. Avoid brown sludge.",
+          "Pool Trap: Build a simple rock weir in a tide pool to trap retreating fish."
+        ]
+      },
+      {
+        label: "H4-5: Process & Heat",
+        duration: "60 min",
+        tasks: [
+          "Cleaning: Rinse catch in seawater. Purge sand from clams. Gut fish.",
+          "Sun Cooking: Place thin fillets on dark, sun-heated rocks. Cover with seaweed.",
+          "Ceviche: Chop fish into small pieces; soak in acidic juice if citrus is found."
+        ]
+      },
+      {
+        label: "H5-6: Consumption & Planning",
+        duration: "60 min",
+        tasks: [
+          "Test Bite: Eat small piece of seaweed. Wait 15 mins for reaction.",
+          "Main Meal: Consume protein and seaweed slowly. Do not overfill.",
+          "Log & Rest: Record what worked. Identify 3 improvements for the next 6-hour cycle."
+        ]
+      }
+    ],
+    details: {
+      "Success Metric": "200+ calories consumed with no injury and a plan for the next 12 hours.",
+      "Safety Warning": "If light is fading, stop processing. prioritize shelter before the 6-hour meal if exposure is a risk.",
+      "Legal Shield": "Categorize as 'Emergency Subsistence' if questioned by authorities."
+    }
+  },
   [Section.DOCTRINE]: {
     title: "Operational Doctrine",
     icon: "Anchor",
