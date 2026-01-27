@@ -30,23 +30,48 @@ const App: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Re-initialize AI client to ensure latest API key and avoid stale sessions
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-      const prompt = `You are a survival expert specializing in the "Blue Sea Print" framework. 
-      The framework covers: maritime resilience, subsistence fishing, tool primitives, nutrition, and preservation.
-      CRITICAL FOCUS: You must prioritize pollution awareness, heavy metal bioaccumulation, and environmental contamination (microplastics, oil, runoff) in all advice.
-      The current context is the 6-Hour Survival Protocol (from zero to meal).
-      Answer the user's specific question concisely and practically. Avoid fluff.
-      User question: ${input}`;
+      
+      const systemInstruction = `You are the 'Field Intelligence' unit for Blue Sea Print, a framework for sea-based food autonomy. Your goal is to provide actionable, real-world advice for individuals or micro-crews seeking nutritional independence from the sea.
 
-      const response = await ai.models.generateContent({
+Core Operating Principles:
+1. SAFETY FIRST: Prioritize human life. Warn about dangerous tides, currents, and slippery rocks.
+2. POLLUTION GUARD: This is your primary filter. Every piece of advice must consider contamination. Warn about oil sheens, sewage odors, urban runoff, microplastics, and heavy metal bioaccumulation (e.g., Mercury in Sharks/Barracuda).
+3. TOOL PRIMITIVES: Recommend tools that can be built or repaired locally from scavenged (plastic, rope) or natural (bone, wood, stone) materials.
+4. NUTRITION REALITY: Focus on complete meals. Remind users about the need for fats (liver/organs) to avoid protein poisoning (Rabbit Starvation).
+5. PRESERVATION: Emphasize solar salting, smoking, and drying. Autonomy requires a buffer.
+6. 6-HOUR PROTOCOL: If the user is in an emergency, prioritize the 6-Hour Survival Protocol (Assessment -> Tools -> Harvest -> Process -> Eat).
+
+Tone: Concise, technical, and practical. Avoid fluff or motivational language. If a harvest site is questionable due to pollution, advise moving up-current immediately.`;
+
+      // Map existing messages to Gemini chat history format
+      const history = messages.map(m => ({
+        role: m.role === 'user' ? 'user' : 'model' as 'user' | 'model',
+        parts: [{ text: m.content }]
+      }));
+
+      const chat = ai.chats.create({
         model: 'gemini-3-flash-preview',
-        contents: prompt,
+        config: {
+          systemInstruction: systemInstruction,
+          temperature: 0.7,
+        },
+        history: history,
       });
 
-      const aiMessage: ChatMessage = { role: 'assistant', content: response.text || "I'm sorry, I couldn't process that." };
+      const response = await chat.sendMessage({ message: input });
+      const aiResponse = response.text || "Field Intelligence signal interrupted. Re-scan environment.";
+
+      const aiMessage: ChatMessage = { role: 'assistant', content: aiResponse };
       setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Error: Could not connect to the field intelligence unit." }]);
+    } catch (error: any) {
+      console.error("AI Assistant Error:", error);
+      let errorMessage = "Error: Field Intelligence unavailable.";
+      if (error.message?.includes("API key")) {
+        errorMessage = "Error: Invalid or missing API key. System locked.";
+      }
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +106,7 @@ const App: React.FC = () => {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight">Blue Sea Print</h1>
-            <p className="text-xs text-slate-400 font-medium">AUTONOMY FRAMEWORK</p>
+            <p className="text-xs text-slate-400 font-medium uppercase tracking-tighter">Autonomy Framework</p>
           </div>
         </div>
 
@@ -108,10 +133,10 @@ const App: React.FC = () => {
 
         <div className="p-4 border-t border-slate-800">
           <div className="p-4 bg-slate-800/50 rounded-lg">
-            <p className="text-xs text-slate-400 mb-1">CURRENT STATUS</p>
+            <p className="text-xs text-slate-400 mb-1">SYSTEM STATUS</p>
             <p className="text-sm font-mono text-emerald-400 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              SYSTEMS DEPLOYED
+              INTELLIGENCE ACTIVE
             </p>
           </div>
         </div>
@@ -134,7 +159,7 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden sm:block text-xs font-mono text-slate-400 uppercase tracking-widest">Contamination Guard Active</span>
+            <span className="hidden sm:block text-xs font-mono text-slate-400 uppercase tracking-widest">Contamination Guard v1.1</span>
           </div>
         </header>
 
@@ -146,7 +171,7 @@ const App: React.FC = () => {
                 <header>
                   <div className="flex items-center gap-3 mb-2">
                     {activeSection === Section.SIX_HOUR_PROTOCOL && (
-                      <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold uppercase rounded tracking-wider">High Priority</span>
+                      <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold uppercase rounded tracking-wider">Priority: Survival</span>
                     )}
                     <h2 className="text-3xl font-bold text-slate-900">{data.title}</h2>
                   </div>
@@ -219,11 +244,11 @@ const App: React.FC = () => {
                         <LucideIcons.Cpu size={18} className="text-blue-600" />
                         Field Intelligence
                       </h2>
-                      <p className="text-xs text-slate-500 mt-1">Ground-truthed AI for specific sea-based survival and pollution queries.</p>
+                      <p className="text-xs text-slate-500 mt-1">Real-time maritime survival and pollution analysis.</p>
                     </div>
                     <div className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-full border border-red-100 flex items-center gap-1">
                       <LucideIcons.ShieldAlert size={10} />
-                      POLLUTION GUARD ON
+                      POLLUTION GUARD ACTIVE
                     </div>
                   </div>
                 </div>
@@ -231,14 +256,17 @@ const App: React.FC = () => {
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                   {messages.length === 0 && (
                     <div className="text-center py-12 text-slate-400">
-                      <LucideIcons.MessageSquare size={48} className="mx-auto mb-4 opacity-20" />
-                      <p>Ask about local species, material substitutes, or pollution screening.</p>
-                      <div className="mt-4 flex flex-wrap justify-center gap-2">
-                        {["Is this oil sheen dangerous?", "How to filter microplastics?", "Identify heavy metal in fish", "Best wood for smoking fish?"].map(q => (
+                      <div className="p-4 bg-blue-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <LucideIcons.MessageSquare size={32} className="text-blue-500" />
+                      </div>
+                      <p className="font-medium text-slate-600">Field Intel Link Established</p>
+                      <p className="text-sm mt-1 max-w-xs mx-auto">Ask about local species, tool primitives, or potential environmental contaminants.</p>
+                      <div className="mt-6 flex flex-wrap justify-center gap-2">
+                        {["Is this oil sheen dangerous?", "How to filter microplastics?", "High-fat species in tropical zones", "DIY gorge hook materials"].map(q => (
                           <button 
                             key={q} 
                             onClick={() => setInput(q)}
-                            className="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-600"
+                            className="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-600 border border-slate-200"
                           >
                             {q}
                           </button>
@@ -247,12 +275,12 @@ const App: React.FC = () => {
                     </div>
                   )}
                   {messages.map((m, i) => (
-                    <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
                       <div className={`
                         max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed
                         ${m.role === 'user' 
-                          ? 'bg-blue-600 text-white rounded-tr-none' 
-                          : 'bg-slate-100 text-slate-800 rounded-tl-none'}
+                          ? 'bg-blue-600 text-white rounded-tr-none shadow-md shadow-blue-100' 
+                          : 'bg-slate-100 text-slate-800 rounded-tl-none border border-slate-200'}
                       `}>
                         {m.content}
                       </div>
@@ -260,17 +288,18 @@ const App: React.FC = () => {
                   ))}
                   {isLoading && (
                     <div className="flex justify-start">
-                      <div className="bg-slate-100 p-4 rounded-2xl rounded-tl-none flex gap-1">
-                        <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" />
-                        <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                        <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                      <div className="bg-slate-100 p-4 rounded-2xl rounded-tl-none border border-slate-200 flex gap-1 items-center">
+                        <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" />
+                        <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+                        <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                        <span className="ml-2 text-[10px] text-slate-400 font-mono uppercase tracking-tighter">Analyzing environment...</span>
                       </div>
                     </div>
                   )}
                   <div ref={chatEndRef} />
                 </div>
 
-                <div className="p-4 border-t border-slate-200 bg-slate-50">
+                <div className="p-4 border-t border-slate-200 bg-white">
                   <form 
                     onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
                     className="flex gap-2"
@@ -278,13 +307,13 @@ const App: React.FC = () => {
                     <input 
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      placeholder="Type your question..."
-                      className="flex-1 bg-white border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Consult Field Intelligence..."
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     />
                     <button 
                       type="submit"
                       disabled={isLoading || !input.trim()}
-                      className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                      className="px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center shadow-lg shadow-blue-100"
                     >
                       <LucideIcons.Send size={18} />
                     </button>
@@ -297,9 +326,12 @@ const App: React.FC = () => {
 
         {/* Footer info (Desktop only) */}
         <footer className="hidden md:flex h-12 border-t border-slate-200 bg-white items-center justify-between px-6 text-[10px] text-slate-400 font-mono uppercase tracking-widest">
-          <div>BLUE SEA PRINT / VERSION 1.1</div>
-          <div>POLLUTION-AWARE AUTONOMY • ENSURE CONTINUITY</div>
-          <div>SCREENING ACTIVE</div>
+          <div>BLUE SEA PRINT / REL 1.1</div>
+          <div>ESTABLISH AUTONOMY • MINIMIZE TOXIN INTAKE</div>
+          <div className="flex items-center gap-1 text-emerald-500">
+            <LucideIcons.Activity size={10} />
+            NODE STATUS: ONLINE
+          </div>
         </footer>
       </main>
     </div>
