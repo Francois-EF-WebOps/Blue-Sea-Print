@@ -33,6 +33,7 @@ const App: React.FC = () => {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
       const prompt = `You are a survival expert specializing in the "Blue Sea Print" framework. 
       The framework covers: maritime resilience, subsistence fishing, tool primitives, nutrition, and preservation.
+      CRITICAL FOCUS: You must prioritize pollution awareness, heavy metal bioaccumulation, and environmental contamination (microplastics, oil, runoff) in all advice.
       The current context is the 6-Hour Survival Protocol (from zero to meal).
       Answer the user's specific question concisely and practically. Avoid fluff.
       User question: ${input}`;
@@ -133,7 +134,7 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden sm:block text-xs font-mono text-slate-400">REV. 01.2024</span>
+            <span className="hidden sm:block text-xs font-mono text-slate-400 uppercase tracking-widest">Contamination Guard Active</span>
           </div>
         </header>
 
@@ -202,8 +203,8 @@ const App: React.FC = () => {
                       </h3>
                       <ul className="space-y-3 text-slate-300">
                         <li className="flex gap-3 items-start"><span className="text-blue-400 font-bold">01</span> Identify high-tide and low-tide lines at your location.</li>
-                        <li className="flex gap-3 items-start"><span className="text-blue-400 font-bold">02</span> Forage 2kg of mussels/limpets for baseline protein.</li>
-                        <li className="flex gap-3 items-start"><span className="text-blue-400 font-bold">03</span> Build your first gorge hook and line.</li>
+                        <li className="flex gap-3 items-start"><span className="text-blue-400 font-bold">02</span> Screening: Identify absence of oil sheens or sewage odor.</li>
+                        <li className="flex gap-3 items-start"><span className="text-blue-400 font-bold">03</span> Forage baseline protein from verified 'clean' rocky zones.</li>
                         <li className="flex gap-3 items-start"><span className="text-blue-400 font-bold">04</span> Locate a source of clean, unpolluted seawater for salt production.</li>
                       </ul>
                    </div>
@@ -212,20 +213,28 @@ const App: React.FC = () => {
             ) : (
               <div className="h-full flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-h-[600px]">
                 <div className="p-4 border-b border-slate-200 bg-slate-50">
-                  <h2 className="font-bold flex items-center gap-2">
-                    <LucideIcons.Cpu size={18} className="text-blue-600" />
-                    Field Intelligence
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">Ground-truthed AI for specific sea-based survival queries.</p>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h2 className="font-bold flex items-center gap-2">
+                        <LucideIcons.Cpu size={18} className="text-blue-600" />
+                        Field Intelligence
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-1">Ground-truthed AI for specific sea-based survival and pollution queries.</p>
+                    </div>
+                    <div className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-full border border-red-100 flex items-center gap-1">
+                      <LucideIcons.ShieldAlert size={10} />
+                      POLLUTION GUARD ON
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                   {messages.length === 0 && (
                     <div className="text-center py-12 text-slate-400">
                       <LucideIcons.MessageSquare size={48} className="mx-auto mb-4 opacity-20" />
-                      <p>Ask a question about local species, material substitutes, or tool construction.</p>
+                      <p>Ask about local species, material substitutes, or pollution screening.</p>
                       <div className="mt-4 flex flex-wrap justify-center gap-2">
-                        {["How to cook limpets?", "Is kelp edible raw?", "Best wood for smoking fish?"].map(q => (
+                        {["Is this oil sheen dangerous?", "How to filter microplastics?", "Identify heavy metal in fish", "Best wood for smoking fish?"].map(q => (
                           <button 
                             key={q} 
                             onClick={() => setInput(q)}
@@ -288,9 +297,9 @@ const App: React.FC = () => {
 
         {/* Footer info (Desktop only) */}
         <footer className="hidden md:flex h-12 border-t border-slate-200 bg-white items-center justify-between px-6 text-[10px] text-slate-400 font-mono uppercase tracking-widest">
-          <div>BLUE SEA PRINT / VERSION 1.0</div>
-          <div>ESTABLISH AUTONOMY • ENSURE CONTINUITY</div>
-          <div>COORD: N/A - GLOBAL PROTOCOL</div>
+          <div>BLUE SEA PRINT / VERSION 1.1</div>
+          <div>POLLUTION-AWARE AUTONOMY • ENSURE CONTINUITY</div>
+          <div>SCREENING ACTIVE</div>
         </footer>
       </main>
     </div>
