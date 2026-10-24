@@ -3,62 +3,20 @@ import { Section, BlueprintContent } from './types';
 
 export const BLUEPRINT_DATA: Record<Section, BlueprintContent> = {
   [Section.SIX_HOUR_PROTOCOL]: {
-    title: "6-Hour Survival Protocol",
-    icon: "Timer",
-    description: "From 'Documentation in Hand' to 'Eating' in 360 minutes. A strict, high-speed deployment for immediate survival with critical pollution screening.",
-    timeline: [
-      {
-        label: "H0-1: Assessment & Screening",
-        duration: "60 min",
-        tasks: [
-          "Check Tide: Identify if water is rising or falling. Locate high-tide line.",
-          "Pollution Scan: Identify oil sheens, chemical odors, or urban runoff. Avoid stagnant areas.",
-          "Resource Scan: Locate rocks (shellfish), pools (fish), and beach (tools).",
-          "Safety Brief: Establish 'Never Back to Sea' and 'Toxin Avoidance' rules."
-        ]
-      },
-      {
-        label: "H1-2: Tool Primitive Build",
-        duration: "60 min",
-        tasks: [
-          "Shell Knife: Chip a flat stone against a hammer-stone for a sharp edge.",
-          "Container: Scavenge non-toxic plastics. Avoid containers previously holding fuel/oil.",
-          "Digging Stick: Sharpen a wrist-thick hardwood stick on rough stone."
-        ]
-      },
-      {
-        label: "H2-4: The Primary Harvest",
-        duration: "120 min",
-        tasks: [
-          "Shellfish: Pry 20+ mussels. Avoid individuals near storm drains or industrial pipes.",
-          "Seaweed: Harvest fresh growth. Avoid seaweed tangled with microplastics or tar balls.",
-          "Pool Trap: Build a rock weir. Ensure the pool is well-flushed by tides to prevent toxin build-up."
-        ]
-      },
-      {
-        label: "H4-5: Process & Decontaminate",
-        duration: "60 min",
-        tasks: [
-          "Cleaning: Rinse in the cleanest moving seawater available. Remove all sediment.",
-          "Purge: Soak clams in seawater for 20 mins to expel sand and potentially trapped micro-debris.",
-          "Sun Cooking: Place fillets on dark rocks. Ensure rocks are free of oil residues or avian waste."
-        ]
-      },
-      {
-        label: "H5-6: Consumption & Observation",
-        duration: "60 min",
-        tasks: [
-          "Test Bite: Eat small piece of seaweed. Wait for metallic/chemical aftertastes.",
-          "Main Meal: Consume protein slowly. If any off-smells are detected, discard immediately.",
-          "Log & Rest: Record water clarity and visible pollution for future site selection."
-        ]
-      }
+    title: "UNVALIDATED — DO NOT USE",
+    icon: "ShieldAlert",
+    description: "The previous six-hour protocol contained unsafe and unsupported food, foraging, tool and coastal-risk instructions. It has been withdrawn from actionable display pending expert review.",
+    steps: [
+      "Do not use this page to make emergency, foraging, food-safety or water-safety decisions.",
+      "Do not enter surf, tidal pools or unstable coastal terrain to obtain food or tools.",
+      "Do not eat unidentified wild organisms or rely on smell, colour, appearance or a test bite to establish safety.",
+      "Do not treat raw fish, sun-heated rocks or improvised tools as validated safety methods.",
+      "In immediate danger, move away from hazards if safe and contact local emergency or rescue services."
     ],
     details: {
-      "Pollution Rule": "If water has a persistent oily sheen or smells of sewage, move 2km up-current before harvesting.",
-      "Success Metric": "200+ calories consumed from a verified low-contamination site.",
-      "Safety Warning": "Filter feeders (mussels) concentrate toxins. In polluted zones, prioritize mobile fish over stationary shellfish.",
-      "Legal Shield": "Categorize as 'Emergency Subsistence' if questioned by authorities."
+      "Status": "Not validated for any particular location, species, season, jurisdiction or user.",
+      "What changed": "Actionable six-hour harvesting instructions have been replaced with a stop-use notice.",
+      "Release gate": "Do not restore survival instructions until authoritative sources, local applicability and qualified review are documented."
     }
   },
   [Section.DOCTRINE]: {
@@ -127,14 +85,17 @@ export const BLUEPRINT_DATA: Record<Section, BlueprintContent> = {
     }
   },
   [Section.SAFETY]: {
-    title: "Safety & Ethics",
+    title: "Safety & Limits",
     icon: "ShieldCheck",
-    description: "Protecting the system, the sea, and your own biology from man-made threats.",
+    description: "This prototype is not a validated survival, food-safety or emergency resource.",
     details: {
-      "Chemical Runoff": "After heavy rain, rivers flush fertilizers and pesticides into the sea. Wait 48 hours for tidal flushing before harvesting near estuaries.",
-      "Microplastics": "Assume all filter feeders contain some. Purge in clean water and consume sparingly in urban zones.",
-      "Red Tide (Biotoxins)": "Biotoxins can be exacerbated by agricultural nutrient runoff. If the water is reddish or abnormally green/foamy, stop all harvesting.",
-      "Ethics of Extraction": "Leave the site cleaner than you found it. Every piece of plastic scavenged for a tool is one less piece of pollution in the system."
+      "Wild food": "Do not identify or consume wild seaweed, shellfish, fish or other organisms based on this app. Appearance, smell and a test bite do not reliably establish safety.",
+      "Marine toxins": "Some marine biotoxins are not reliably removed by cooking. Follow current local public-health and fisheries advisories; do not harvest when status is unknown.",
+      "Pollution": "Visual inspection and smell cannot rule out chemical, sewage or microbial contamination. No generic distance or waiting period can certify a site safe.",
+      "Coastal hazards": "Do not enter surf, tidal pools, isolated coastlines or unstable rocks to obtain food or tools. Conditions can change rapidly.",
+      "Food preparation": "Raw fish, ceviche, sun-heated rocks and improvised cooking methods are not validated food-safety methods.",
+      "Emergency response": "Prioritise personal safety, known safe food and drinking water, and contact with local emergency or rescue services where needed.",
+      "Evidence status": "Safety-critical guidance is not validated. Use current authoritative local sources and qualified advice."
     }
   },
   [Section.FAILURE]: {

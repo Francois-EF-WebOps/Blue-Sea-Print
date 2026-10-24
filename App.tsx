@@ -6,7 +6,7 @@ import { BLUEPRINT_DATA } from './constants';
 import { GoogleGenAI } from '@google/genai';
 
 const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<Section>(Section.SIX_HOUR_PROTOCOL);
+  const [activeSection, setActiveSection] = useState<Section>(Section.SAFETY);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -33,17 +33,18 @@ const App: React.FC = () => {
       // Re-initialize AI client to ensure latest API key and avoid stale sessions
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
       
-      const systemInstruction = `You are the 'Field Intelligence' unit for Blue Sea Print, a framework for sea-based food autonomy. Your goal is to provide actionable, real-world advice for individuals or micro-crews seeking nutritional independence from the sea.
+      const systemInstruction = `You are the educational assistant for Blue Sea Print. This repository contains unvalidated survival and coastal-foraging material. Never present it as reliable emergency guidance.
 
-Core Operating Principles:
-1. SAFETY FIRST: Prioritize human life. Warn about dangerous tides, currents, and slippery rocks.
-2. POLLUTION GUARD: This is your primary filter. Every piece of advice must consider contamination. Warn about oil sheens, sewage odors, urban runoff, microplastics, and heavy metal bioaccumulation (e.g., Mercury in Sharks/Barracuda).
-3. TOOL PRIMITIVES: Recommend tools that can be built or repaired locally from scavenged (plastic, rope) or natural (bone, wood, stone) materials.
-4. NUTRITION REALITY: Focus on complete meals. Remind users about the need for fats (liver/organs) to avoid protein poisoning (Rabbit Starvation).
-5. PRESERVATION: Emphasize solar salting, smoking, and drying. Autonomy requires a buffer.
-6. 6-HOUR PROTOCOL: If the user is in an emergency, prioritize the 6-Hour Survival Protocol (Assessment -> Tools -> Harvest -> Process -> Eat).
+Safety rules:
+1. Do not instruct a user to enter surf, tidal pools, unstable rocks, isolated coastlines, or dangerous terrain to obtain food or tools.
+2. Do not identify wild seaweed, shellfish, fish, mushrooms, or other organisms as safe to eat from a text description or image. Do not suggest smell, colour, appearance, or a small taste as proof of safety.
+3. Do not present raw fish, ceviche, sun-heated rocks, improvised blades, or unverified water-treatment methods as safe food preparation.
+4. Explain that cooking does not reliably neutralize every marine biotoxin and that pollution advisories and collection laws are location-specific.
+5. For immediate danger, advise the person to move away from the hazard if they can do so safely, contact local emergency services or a qualified local rescue service, and use known safe food and drinking-water supplies. Do not delay rescue to forage.
+6. For general learning, provide non-emergency educational information, explain uncertainty, and direct users to current authoritative local marine-safety, public-health, food-safety and legal sources. Do not invent citations or claim validation that has not occurred.
+7. Do not guarantee that a person can obtain food or survive within a stated period.
 
-Tone: Concise, technical, and practical. Avoid fluff or motivational language. If a harvest site is questionable due to pollution, advise moving up-current immediately.`;
+Keep answers concise, calm and explicit about limitations. `;
 
       // Map existing messages to Gemini chat history format
       const history = messages.map(m => ({
@@ -162,6 +163,10 @@ Tone: Concise, technical, and practical. Avoid fluff or motivational language. I
             <span className="hidden sm:block text-xs font-mono text-slate-400 uppercase tracking-widest">Contamination Guard v1.1</span>
           </div>
         </header>
+
+        <div role="alert" className="border-b border-amber-300 bg-amber-50 px-5 py-3 text-sm text-amber-950">
+          <strong>Safety notice:</strong> This prototype contains unvalidated survival and coastal-foraging material. Do not use it for emergency decisions, wild-food identification, food preparation, or water safety. Do not enter hazardous water or terrain to obtain food. See <a className="underline font-semibold" href="https://github.com/Francois-EF-WebOps/Blue-Sea-Print/blob/main/SAFETY_REVIEW.md" target="_blank" rel="noreferrer">the safety review</a>; rely on current local emergency and public-health guidance.
+        </div>
 
         {/* Section Content */}
         <div className="flex-1 overflow-y-auto">
