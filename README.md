@@ -1,3 +1,5 @@
+> **Safety notice (2026-10-24):** The six-hour survival protocol below is **not validated and must not be used as emergency, foraging, food-safety or survival guidance**. It includes unsafe or unsupported instructions involving wild foods, shellfish, raw fish, sun-heated rocks, improvised tools and hazardous coastal terrain. Read [SAFETY_REVIEW.md](SAFETY_REVIEW.md) before using or sharing this repository. Do not market this material as a validated survival guide.
+
 Blue Sea Print: 6-Hour Survival Protocol
 
 Immediate Action Plan: Hour 0 to First Meal
